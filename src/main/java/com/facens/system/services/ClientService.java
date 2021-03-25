@@ -14,6 +14,8 @@ import com.facens.system.entitites.Client;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -24,10 +26,10 @@ public class ClientService {
     @Autowired
     private ClientRepository repo;
 
-    public List<ClientDTO> getClients() {
-        List<Client> list = this.repo.findAll();
+    public Page<ClientDTO> getClients(PageRequest pageRequest, String name, String address) {
+        Page<Client> list = this.repo.find(pageRequest, name, address);
 
-        return this.toDTOList(list);
+        return list.map(c -> new ClientDTO(c));
     }
 
     public ClientDTO getClientByIdDto(Long id) {
